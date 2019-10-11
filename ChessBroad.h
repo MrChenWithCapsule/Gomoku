@@ -12,9 +12,9 @@ struct Position
     int row;
     int column;
 };
-Position operator*(int num, Position pos) { return Position{num * pos.row, num * pos.column}; }
-Position operator+(Position left, Position right) { return Position{left.row + right.row, left.column + right.column}; }
-Position operator-(Position left, Position right) { return Position{left.row - right.row, left.column - right.column}; }
+inline Position operator*(int num, Position pos) { return Position{num * pos.row, num * pos.column}; }
+inline Position operator+(Position left, Position right) { return Position{left.row + right.row, left.column + right.column}; }
+inline Position operator-(Position left, Position right) { return Position{left.row - right.row, left.column - right.column}; }
 
 constexpr char first_player_chess = 'O';
 constexpr char second_player_chess = 'X';
