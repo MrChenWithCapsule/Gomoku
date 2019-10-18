@@ -59,8 +59,8 @@ int main(int argc, char const *argv[])
         }
     }
 
-    ChessBroad broad;
     // Play game
+    ChessBroad broad;
     bool is_first_player = true;
     cout << clear << broad << flush;
     Position pos;
