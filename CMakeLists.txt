@@ -3,5 +3,6 @@ project(Gomoku)
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 17)
 
-aux_source_directory(. source_dict)
-add_executable(Gomoku ${source_dict})
+include_directories(include)
+aux_source_directory(src SourceDir)
+add_executable(Gomoku ${SourceDir})
