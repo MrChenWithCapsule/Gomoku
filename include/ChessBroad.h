@@ -29,14 +29,14 @@ class InvalidPosition : public std::exception
 
 class ChessBroad
 {
-  private:
-    std::array<std::array<ChessType, broad_size>, broad_size> _broad{};
-
   public:
     void emplace(Position pos, Chess ch);
     bool full() const;
     bool win_game(Position hint) const;
     Chess get(Position pos) const;
+
+  private:
+    std::array<std::array<ChessType, broad_size>, broad_size> _broad{};
 };
 
 std::ostream &operator<<(std::ostream &os, const ChessBroad &broad);
