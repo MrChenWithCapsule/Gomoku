@@ -45,12 +45,12 @@ int main(int argc, char const *argv[])
         case 0:
             return;
         case 1:
-            first_player = std::make_unique<HumanPlayer>();
-            second_player = std::make_unique<ComputerPlayer>();
+            first_player = std::make_unique<HumanPlayer>(true);
+            second_player = std::make_unique<ComputerPlayer>(false);
             break;
         case 2:
-            first_player = std::make_unique<HumanPlayer>();
-            second_player = std::make_unique<HumanPlayer>();
+            first_player = std::make_unique<HumanPlayer>(true);
+            second_player = std::make_unique<HumanPlayer>(false);
             break;
 
         default:

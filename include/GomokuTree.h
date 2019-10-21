@@ -22,8 +22,8 @@ class GomokuTree
   public:
     using NodeAllocator = std::allocator<Node>;
 
-    void update(Position pos, Chess ch);
-    // Someone placed a new chess.
+    void update(Position pos);
+    // Current player placed a new chess.
 
     void decide();
     // Try to find the best decision for the current player.
