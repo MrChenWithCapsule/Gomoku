@@ -1,3 +1,4 @@
+#pragma once
 #include <array>
 #include <exception>
 #include <iosfwd>
@@ -13,6 +14,10 @@ struct Position
 Position operator+(Position left, Position right);
 Position operator-(Position left, Position right);
 Position operator*(int n, Position pos);
+bool operator<(Position left, Position right)
+{
+    return left.row < right.row || (left.row == right.row && left.column < right.column);
+}
 
 enum class Chess : char
 {
@@ -36,7 +41,7 @@ class ChessBroad
     Chess get(Position pos) const;
 
   private:
-    std::array<std::array<ChessType, broad_size>, broad_size> _broad{};
+    std::array<std::array<Chess, broad_size>, broad_size> _broad{};
 };
 
 std::ostream &operator<<(std::ostream &os, const ChessBroad &broad);

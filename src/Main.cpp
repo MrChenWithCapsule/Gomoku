@@ -43,7 +43,7 @@ int main(int argc, char const *argv[])
         switch (mode)
         {
         case 0:
-            return;
+            return 0;
         case 1:
             first_player = std::make_unique<HumanPlayer>(true);
             second_player = std::make_unique<ComputerPlayer>(false);
