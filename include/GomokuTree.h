@@ -7,19 +7,15 @@
 
 struct Node
 {
-    int score;
-    int searched_depth;
+    int score = 0;
+    int searched_depth = not_searched;
     Position pos;
     std::vector<Node *> childs;
 
     // searched_depth:
     static constexpr int cut = -1;
-    static constexpr int leaf = -2;
+    static constexpr int not_searched = 0;
 };
-bool operator<(const Node &left, const Node &right)
-{
-    return left.pos < right.pos;
-}
 
 class GomokuTree
 {
@@ -37,11 +33,11 @@ class GomokuTree
   private:
     void find_possible_position(Node *target, int target_depth);
     void cut_childs(Node *target, Node *except);
+    void search(Node *target, int target_depth, int depth_limit);
 
     ChessBroad _current_broad;
     Node *_root;
     Node *_current;
     NodeAllocator _alloc;
-    int _node_n = 0;
     int _current_depth = 0;
 };

@@ -22,7 +22,7 @@ std::ostream &operator<<(std::ostream &os, Chess ch)
 
 void ChessBroad::emplace(Position pos, Chess ch)
 {
-    if (_broad[pos.row][pos.column] != Chess::empty)
+    if (_broad[pos.row][pos.column] != Chess::empty && ch != Chess::empty)
         throw InvalidPosition{};
     _broad[pos.row][pos.column] = ch;
 }
