@@ -14,16 +14,14 @@ struct Position
 Position operator+(Position left, Position right);
 Position operator-(Position left, Position right);
 Position operator*(int n, Position pos);
-bool operator<(Position left, Position right)
-{
-    return left.row < right.row || (left.row == right.row && left.column < right.column);
-}
+bool operator<(Position left, Position right);
 
 enum class Chess : char
 {
     empty = ' ',
     first_player = 'O',
-    second_player = 'X'
+    second_player = 'X',
+    any = 'A' // For evaluation
 };
 
 std::ostream &operator<<(std::ostream &os, Chess ch);
@@ -35,13 +33,14 @@ class InvalidPosition : public std::exception
 class ChessBroad
 {
   public:
+    ChessBroad();
     void emplace(Position pos, Chess ch);
     bool full() const;
     bool win_game(Position hint) const;
     Chess get(Position pos) const;
 
   private:
-    std::array<std::array<Chess, broad_size>, broad_size> _broad{};
+    std::array<std::array<Chess, broad_size>, broad_size> _broad;
 };
 
 std::ostream &operator<<(std::ostream &os, const ChessBroad &broad);

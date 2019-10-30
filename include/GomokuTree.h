@@ -22,6 +22,7 @@ class GomokuTree
 
   public:
     using NodeAllocator = std::allocator<Node>;
+    using AllocatorTraits = std::allocator_traits<NodeAllocator>;
 
     GomokuTree();
     void update(Position pos);
@@ -36,8 +37,7 @@ class GomokuTree
     void search(Node *target, int target_depth, int depth_limit);
 
     ChessBroad _current_broad;
-    Node *_root;
     Node *_current;
     NodeAllocator _alloc;
-    int _current_depth = 0;
+    int _current_depth;
 };

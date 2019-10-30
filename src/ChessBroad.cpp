@@ -19,7 +19,16 @@ std::ostream &operator<<(std::ostream &os, Chess ch)
 {
     return os << static_cast<char>(ch);
 }
+bool operator<(Position left, Position right)
+{
+    return left.row < right.row || (left.row == right.row && left.column < right.column);
+}
 
+ChessBroad::ChessBroad()
+{
+    for (auto &arr : _broad)
+        arr.fill(Chess::empty);
+}
 void ChessBroad::emplace(Position pos, Chess ch)
 {
     if (_broad[pos.row][pos.column] != Chess::empty && ch != Chess::empty)
@@ -30,7 +39,7 @@ bool ChessBroad::full() const
 {
     for (int i = 0; i < broad_size; ++i)
         for (int j = 0; j < broad_size; ++j)
-            if (_broad[i][j] != Chess::empty)
+            if (_broad[i][j] == Chess::empty)
                 return false;
     return true;
 }
@@ -57,14 +66,14 @@ std::ostream &operator<<(std::ostream &os, const ChessBroad &broad)
 
     os << R"(
    c 1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
-  r|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+  r|-----------------------------------------------------------|
 )";
     for (int i = 0; i < broad_size; ++i)
     {
         os << std::setw(3) << i + 1 << '|';
         for (int j = 0; j < broad_size; ++j)
-            os << ' ' << broad.get({i, j}) << " |";
-        os << "\n   |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n";
+            os << ' ' << broad.get({i, j}) << " |" << std::flush;
+        os << "\n   |-----------------------------------------------------------|\n";
     }
     os << std::flush;
     return os;
