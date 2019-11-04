@@ -78,6 +78,7 @@ int eval_point(const ChessBroad &broad, Position pos)
 }
 int evaluate(const ChessBroad &broad)
 {
+    // TODO: Consider who's the next.
     int score = 0;
     for (int i = 0; i < broad_size; ++i)
         for (int j = 0; j < broad_size; ++j)

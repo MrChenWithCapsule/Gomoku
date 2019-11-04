@@ -35,9 +35,15 @@ class GomokuTree
     void find_possible_position(Node *target, int target_depth);
     void cut_childs(Node *target, Node *except);
     void search(Node *target, int target_depth, int depth_limit);
+    bool is_first();
 
     ChessBroad _current_broad;
     Node *_current;
     NodeAllocator _alloc;
-    int _current_depth;
+
+    int _current_depth = 0;
+    /*
+     * _current_depth % 2 == 0: first player's tern
+     * else is second's.
+     */
 };
