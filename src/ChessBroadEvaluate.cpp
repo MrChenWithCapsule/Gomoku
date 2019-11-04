@@ -43,6 +43,8 @@ std::pair<Pattern, int> line_score[] = {
     {"   xx"_c, -70},  {" ooo"_c, 150},   {" xxx"_c, -140},   {" ooox"_c, 150},       {" xxxo"_c, -140},
     {" oo o"_c, 1000}, {" xx x"_c, -800}, {" o oo"_c, 1000},  {" x xx"_c, -800},      {" ooo "_c, 1000},
     {" xxx "_c, -800}, {" oooo"_c, 3000}, {" xxxx"_c, -3500}, {"ooooo"_c, first_win}, {"xxxxx"_c, second_win}};
+
+// Check is matches.
 bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
 {
     auto in_range = [](Position pos) {
@@ -62,6 +64,8 @@ bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
     }
     return true;
 }
+
+// Try to match corresponding chesses with the pattern in the table.
 int match(const ChessBroad &broad, Position pos, Position delta)
 {
     for (int i = std::size(line_score) - 1; i >= 0; --i)
@@ -69,6 +73,8 @@ int match(const ChessBroad &broad, Position pos, Position delta)
             return line_score[i].second;
     return 0;
 }
+
+// Evaluate the score of the current point.
 int eval_point(const ChessBroad &broad, Position pos)
 {
     return std::max({match(broad, pos, {1, 0}), match(broad, pos, {1, 1}), match(broad, pos, {0, 1}),
@@ -79,6 +85,7 @@ int eval_point(const ChessBroad &broad, Position pos)
 int evaluate(const ChessBroad &broad)
 {
     // TODO: Consider who's the next.
+    // TODO: Use the previous result for optimization.
     int score = 0;
     for (int i = 0; i < broad_size; ++i)
         for (int j = 0; j < broad_size; ++j)

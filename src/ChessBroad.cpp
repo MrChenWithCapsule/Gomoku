@@ -45,6 +45,7 @@ bool ChessBroad::full() const
 }
 bool ChessBroad::win_game(Position hint) const
 {
+    // Check with a certain direction.
     auto check = [this](Position delta, Position origin) {
         auto in_range = [](Position pos) { return pos.row >= 0 && pos.row < 15 && pos.column >= 0 && pos.column < 15; };
         Chess origin_ch = get(origin);
@@ -55,6 +56,8 @@ bool ChessBroad::win_game(Position hint) const
             ++count;
         return count == 5;
     };
+
+    // Check with all four directions.
     return check({1, 0}, hint) || check({1, 1}, hint) || check({0, 1}, hint) || check({1, -1}, hint);
 }
 Chess ChessBroad::get(Position pos) const

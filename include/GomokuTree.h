@@ -25,16 +25,24 @@ class GomokuTree
     using AllocatorTraits = std::allocator_traits<NodeAllocator>;
 
     GomokuTree();
-    void update(Position pos);
-    // Current player placed a new chess.
 
-    Position decide();
+    // Update the interal status when current player placed a new chess.
+    void update(Position pos);
+
     // Try to find the best decision for the current player.
+    Position decide();
 
   private:
+    // Find all possible decisions for a node.
     void find_possible_position(Node *target, int target_depth);
+
+    // Cut the childs of a node.
     void cut_childs(Node *target, Node *except);
+
+    // Search the tree for the best decision.
     void search(Node *target, int target_depth, int depth_limit);
+
+    // Find out if it is the first player's turn.
     bool is_first();
 
     ChessBroad _current_broad;
@@ -44,6 +52,6 @@ class GomokuTree
     int _current_depth = 0;
     /*
      * _current_depth % 2 == 0: first player's tern
-     * else is second's.
+     * else: second's.
      */
 };

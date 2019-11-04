@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iosfwd>
 
+// A utility to clear the screen.
 class ClearScreen
 {
 } clear;

@@ -16,7 +16,11 @@ void GomokuTree::update(Position pos)
     auto comp = [&](Node *const left, Node *const right) { return left->pos < right->pos; };
     static Node temp;
     temp.pos = pos;
+
+    // Find which node to move to.
     Node *current_new = *std::lower_bound(_current->childs.begin(), _current->childs.end(), &temp, comp);
+
+    // Release other nodes and the parent node, move to the new node.
     cut_childs(_current, current_new);
     if (_current_depth)
         _current_broad.emplace(_current->pos, is_first() ? Chess::first_player : Chess::second_player);
@@ -49,7 +53,10 @@ void GomokuTree::cut_childs(Node *target, Node *except)
     {
         if (ptr == except)
             continue;
+
+        // Cut recursively.
         cut_childs(ptr, nullptr);
+
         AllocatorTraits::destroy(_alloc, ptr);
         AllocatorTraits::deallocate(_alloc, ptr, 1);
     }
@@ -71,31 +78,44 @@ bool GomokuTree::is_first()
 
 Position GomokuTree::decide()
 {
-    static constexpr int search_depth_limit = 1;
-    search(_current, _current_depth, _current_depth + search_depth_limit);
+    static constexpr int depth_limit = 1;
+    search(_current, _current_depth, _current_depth + depth_limit);
     auto comp = [this](Node *left, Node *right) {
         return is_first() ? left->score < right->score : left->score > right->score;
     };
+
+    // Find the best decision.
     auto it = std::max_element(_current->childs.begin(), _current->childs.end(), comp);
     return (*it)->pos;
 }
 
 void GomokuTree::search(Node *target, int target_depth, int depth_limit)
 {
+    // TODO: implement alpha-beta pruning.
+
+    // Update the internal status for evaluation.
     _current_broad.emplace(target->pos, is_first() ? Chess::first_player : Chess::second_player);
+
     if (target_depth == depth_limit)
         target->score = evaluate(_current_broad);
     else
     {
         auto worse = [this](int m, int n) { return is_first() ? std::min(m, n) : std::max(m, n); };
+
+        // Find possible decisions if current node is not searched and isn't a leaf.
         if (target->searched_depth == Node::not_searched && target->score != first_win && target->score != second_win)
             find_possible_position(target, target_depth);
+
         target->score = is_first() ? first_win : second_win;
         for (auto ptr : target->childs)
         {
             search(ptr, target_depth + 1, depth_limit);
+
+            // Assume that the other player will make the best decision possible.
             target->score = worse(target->score, ptr->score);
         }
     }
+
+    // Resume internal status.
     _current_broad.emplace(target->pos, Chess::empty);
 }
