@@ -11,7 +11,7 @@ GomokuTree::GomokuTree()
 
 void GomokuTree::update(Position pos)
 {
-    if (_current->searched_depth == Node::not_searched || _current->searched_depth == Node::cut)
+    if (_current->status == Node::not_searched || _current->status == Node::cut)
         find_possible_position(_current, _current_depth);
     auto comp = [&](Node *const left, Node *const right) { return left->pos < right->pos; };
     static Node temp;
@@ -43,12 +43,12 @@ void GomokuTree::find_possible_position(Node *target, int target_depth)
                 ptr->pos = Position{i, j};
                 target->childs.push_back(ptr);
             }
-    target->searched_depth = 1;
+    target->status = Node::searched;
 }
 
 void GomokuTree::cut_childs(Node *target, Node *except)
 {
-    if (target->searched_depth == Node::cut || target->searched_depth == Node::not_searched)
+    if (target->status == Node::cut || target->status == Node::not_searched)
         return;
     for (Node *ptr : target->childs)
     {
@@ -66,10 +66,10 @@ void GomokuTree::cut_childs(Node *target, Node *except)
     {
         target->childs.push_back(except);
         target->childs.shrink_to_fit();
-        target->searched_depth = except->searched_depth + 1;
+        target->status = Node::searched;
     }
     else
-        target->searched_depth = Node::cut;
+        target->status = Node::cut;
 }
 
 bool GomokuTree::is_first()
@@ -121,7 +121,7 @@ void GomokuTree::search(Node *target, int target_depth, int depth_limit)
         auto worse = [this](int m, int n) { return is_first() ? std::min(m, n) : std::max(m, n); };
 
         // Find possible decisions if current node is not searched and isn't a leaf.
-        if (target->searched_depth == Node::not_searched && target->score != first_win && target->score != second_win)
+        if (target->status == Node::not_searched && target->score != first_win && target->score != second_win)
             find_possible_position(target, target_depth);
 
         target->score = is_first() ? first_win : second_win;
@@ -147,7 +147,7 @@ void GomokuTree::pruning_search(Node *target, int target_depth, int depth_limit)
         auto worse = [this](int m, int n) { return is_first() ? std::min(m, n) : std::max(m, n); };
 
         // Find possible decisions if current node is not searched and isn't a leaf.
-        if (target->searched_depth == Node::not_searched && target->score != first_win && target->score != second_win)
+        if (target->status == Node::not_searched && target->score != first_win && target->score != second_win)
             find_possible_position(target, target_depth);
 
         target->score = is_first() ? first_win : second_win;

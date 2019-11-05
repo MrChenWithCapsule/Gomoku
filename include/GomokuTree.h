@@ -7,8 +7,14 @@
 
 struct Node
 {
+    enum NodeStatus
+    {
+        not_searched,
+        cut,
+        searched
+    };
     int score = 0;
-    int searched_depth = not_searched;
+    NodeStatus status = not_searched;
     Position pos;
     std::vector<Node *> childs;
     Node *parent = nullptr;
@@ -17,10 +23,6 @@ struct Node
     Node(Node *p) : parent{p}
     {
     }
-
-    // searched_depth:
-    static constexpr int cut = -1;
-    static constexpr int not_searched = 0;
 };
 
 class GomokuTree
