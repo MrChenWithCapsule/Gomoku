@@ -10,4 +10,4 @@ constexpr int first_win = INT_MAX;
 constexpr int second_win = INT_MIN;
 
 // Evaluate the current score.
-int evaluate(const ChessBroad &broad, bool next_first);
+int evaluate(const ChessBroad &broad);

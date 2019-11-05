@@ -97,7 +97,7 @@ void GomokuTree::search(Node *target, int target_depth, int depth_limit)
     _current_broad.emplace(target->pos, is_first() ? Chess::first_player : Chess::second_player);
 
     if (target_depth == depth_limit)
-        target->score = evaluate(_current_broad, !is_first());
+        target->score = evaluate(_current_broad);
     else
     {
         auto worse = [this](int m, int n) { return is_first() ? std::min(m, n) : std::max(m, n); };
