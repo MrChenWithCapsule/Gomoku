@@ -31,18 +31,18 @@ constexpr Pattern operator""_c(const char *str, size_t len)
 }
 
 std::pair<Pattern, int> line_score[] = {
-    {" o"_c, 17},      {" x"_c, -12},     {"  o"_c, 17},      {"  x"_c, -12},         {"   o"_c, 17},
-    {"   x"_c, -12},   {" o x"_c, 17},    {" x o"_c, -12},    {"  ox"_c, 15},         {"  xo"_c, -10},
-    {" o  x"_c, 19},   {" x  o"_c, -14},  {"  o x"_c, 17},    {"  x o"_c, -12},       {"   ox"_c, 15},
-    {"   xo"_c, -10},  {" o   "_c, 21},   {" x   "_c, -16},   {"  o  "_c, 19},        {"  x  "_c, -14},
-    {"   o "_c, 17},   {"   x "_c, -12},  {"    o"_c, 15},    {"    x"_c, -10},       {" o o"_c, 65},
-    {" x x"_c, -60},   {" oo "_c, 65},    {" xx "_c, -60},    {" oo"_c, 65},          {" xx"_c, -60},
-    {"  oo"_c, 65},    {"  xx"_c, -60},   {" o ox"_c, 65},    {" x xo"_c, -60},       {" oo x"_c, 65},
-    {" xx o"_c, -60},  {"  oox"_c, 65},   {"  xxo"_c, -60},   {" o o "_c, 75},        {" x x "_c, -70},
-    {" oo  "_c, 75},   {" xx  "_c, -70},  {"  oo "_c, 75},    {"  xx "_c, -70},       {"   oo"_c, 75},
-    {"   xx"_c, -70},  {" ooo"_c, 150},   {" xxx"_c, -140},   {" ooox"_c, 150},       {" xxxo"_c, -140},
-    {" oo o"_c, 1000}, {" xx x"_c, -800}, {" o oo"_c, 1000},  {" x xx"_c, -800},      {" ooo "_c, 1000},
-    {" xxx "_c, -800}, {" oooo"_c, 3000}, {" xxxx"_c, -3500}, {"ooooo"_c, first_win}, {"xxxxx"_c, second_win}};
+    {" o"_c, 12},      {" x"_c, -12},     {"  o"_c, 12},      {"  x"_c, -12},         {"   o"_c, 12},
+    {"   x"_c, -12},   {" o x"_c, 12},    {" x o"_c, -12},    {"  ox"_c, 10},         {"  xo"_c, -10},
+    {" o  x"_c, 14},   {" x  o"_c, -14},  {"  o x"_c, 12},    {"  x o"_c, -12},       {"   ox"_c, 10},
+    {"   xo"_c, -10},  {" o   "_c, 16},   {" x   "_c, -16},   {"  o  "_c, 14},        {"  x  "_c, -14},
+    {"   o "_c, 12},   {"   x "_c, -12},  {"    o"_c, 10},    {"    x"_c, -10},       {" o o"_c, 60},
+    {" x x"_c, -60},   {" oo "_c, 60},    {" xx "_c, -60},    {" oo"_c, 60},          {" xx"_c, -60},
+    {"  oo"_c, 60},    {"  xx"_c, -60},   {" o ox"_c, 60},    {" x xo"_c, -60},       {" oo x"_c, 60},
+    {" xx o"_c, -60},  {"  oox"_c, 60},   {"  xxo"_c, -60},   {" o o "_c, 70},        {" x x "_c, -70},
+    {" oo  "_c, 70},   {" xx  "_c, -70},  {"  oo "_c, 70},    {"  xx "_c, -70},       {"   oo"_c, 70},
+    {"   xx"_c, -70},  {" ooo"_c, 140},   {" xxx"_c, -140},   {" ooox"_c, 140},       {" xxxo"_c, -140},
+    {" oo o"_c, 800},  {" xx x"_c, -800}, {" o oo"_c, 800},   {" x xx"_c, -800},      {" ooo "_c, 800},
+    {" xxx "_c, -800}, {" oooo"_c, 3500}, {" xxxx"_c, -3500}, {"ooooo"_c, first_win}, {"xxxxx"_c, second_win}};
 
 // Check if matches.
 bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
@@ -66,34 +66,39 @@ bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
 }
 
 // Try to match corresponding chesses with the pattern in the table.
-int match(const ChessBroad &broad, Position pos, Position delta)
+int match(const ChessBroad &broad, Position pos, Position delta, bool next_first)
 {
     for (int i = std::size(line_score) - 1; i >= 0; --i)
         if (is_match(broad, pos, delta, i))
-            return line_score[i].second;
+        {
+            if (next_first)
+                return i % 2 ? line_score[i].second + line_score[i].second / 4 : line_score[i].second;
+            else
+                return !(i % 2) ? line_score[i].second + line_score[i].second / 4 : line_score[i].second;
+        }
     return 0;
 }
 
 // Evaluate the score of the current point.
-int eval_point(const ChessBroad &broad, Position pos)
+int eval_point(const ChessBroad &broad, Position pos, bool next_first)
 {
-    std::array scores{match(broad, pos, {1, 0}),  match(broad, pos, {1, 1}),  match(broad, pos, {0, 1}),
-                      match(broad, pos, {-1, 1}), match(broad, pos, {-1, 0}), match(broad, pos, {-1, -1}),
-                      match(broad, pos, {0, -1}), match(broad, pos, {1, -1})};
+    std::array scores{match(broad, pos, {1, 0}, next_first),  match(broad, pos, {1, 1}, next_first),
+                      match(broad, pos, {0, 1}, next_first),  match(broad, pos, {-1, 1}, next_first),
+                      match(broad, pos, {-1, 0}, next_first), match(broad, pos, {-1, -1}, next_first),
+                      match(broad, pos, {0, -1}, next_first), match(broad, pos, {1, -1}, next_first)};
     for (auto s : scores)
         if (s == first_win || s == second_win)
             return s;
     return std::accumulate(scores.begin(), scores.end(), 0);
 }
-int evaluate(const ChessBroad &broad)
+int evaluate(const ChessBroad &broad, bool next_first)
 {
-    // TODO: Consider who's the next.
     // TODO: Use the previous result for optimization.
     int score = 0;
     for (int i = 0; i < broad_size; ++i)
         for (int j = 0; j < broad_size; ++j)
         {
-            int tmp = eval_point(broad, {i, j});
+            int tmp = eval_point(broad, {i, j}, next_first);
             if (tmp == first_win || tmp == second_win)
                 return tmp;
             else
