@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <array>
+#include <numeric>
 #include <string>
 #include <utility>
 
@@ -44,7 +44,7 @@ std::pair<Pattern, int> line_score[] = {
     {" oo o"_c, 1000}, {" xx x"_c, -800}, {" o oo"_c, 1000},  {" x xx"_c, -800},      {" ooo "_c, 1000},
     {" xxx "_c, -800}, {" oooo"_c, 3000}, {" xxxx"_c, -3500}, {"ooooo"_c, first_win}, {"xxxxx"_c, second_win}};
 
-// Check is matches.
+// Check if matches.
 bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
 {
     auto in_range = [](Position pos) {
@@ -77,10 +77,13 @@ int match(const ChessBroad &broad, Position pos, Position delta)
 // Evaluate the score of the current point.
 int eval_point(const ChessBroad &broad, Position pos)
 {
-    return std::max({match(broad, pos, {1, 0}), match(broad, pos, {1, 1}), match(broad, pos, {0, 1}),
-                     match(broad, pos, {-1, 1}), match(broad, pos, {-1, 0}), match(broad, pos, {-1, -1}),
-                     match(broad, pos, {0, -1}), match(broad, pos, {1, -1})},
-                    [](int left, int right) { return abs(left) < abs(right); });
+    std::array scores{match(broad, pos, {1, 0}),  match(broad, pos, {1, 1}),  match(broad, pos, {0, 1}),
+                      match(broad, pos, {-1, 1}), match(broad, pos, {-1, 0}), match(broad, pos, {-1, -1}),
+                      match(broad, pos, {0, -1}), match(broad, pos, {1, -1})};
+    for (auto s : scores)
+        if (s == first_win || s == second_win)
+            return s;
+    return std::accumulate(scores.begin(), scores.end(), 0);
 }
 int evaluate(const ChessBroad &broad)
 {
