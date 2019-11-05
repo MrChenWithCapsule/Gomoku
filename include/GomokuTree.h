@@ -11,6 +11,12 @@ struct Node
     int searched_depth = not_searched;
     Position pos;
     std::vector<Node *> childs;
+    Node *parent = nullptr;
+
+    Node() = default;
+    Node(Node *p) : parent{p}
+    {
+    }
 
     // searched_depth:
     static constexpr int cut = -1;
@@ -41,6 +47,7 @@ class GomokuTree
 
     // Search the tree for the best decision.
     void search(Node *target, int target_depth, int depth_limit);
+    void pruning_search(Node *target, int target_depth, int depth_limit);
 
     // Find out if it is the first player's turn.
     bool is_first();
