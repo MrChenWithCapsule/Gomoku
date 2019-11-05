@@ -31,7 +31,11 @@ ChessBroad::ChessBroad()
 }
 void ChessBroad::emplace(Position pos, Chess ch)
 {
-    if (_broad[pos.row][pos.column] != Chess::empty && ch != Chess::empty)
+
+    auto in_range = [](Position pos) {
+        return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
+    };
+    if (!in_range(pos) || (_broad[pos.row][pos.column] != Chess::empty && ch != Chess::empty))
         throw InvalidPosition{};
     _broad[pos.row][pos.column] = ch;
 }
@@ -47,7 +51,9 @@ bool ChessBroad::win_game(Position hint) const
 {
     // Check with a certain direction.
     auto check = [this](Position delta, Position origin) {
-        auto in_range = [](Position pos) { return pos.row >= 0 && pos.row < 15 && pos.column >= 0 && pos.column < 15; };
+        auto in_range = [](Position pos) {
+            return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
+        };
         Chess origin_ch = get(origin);
         int count = 0;
         for (Position pos = origin; in_range(pos) && get(pos) == origin_ch; pos = pos + delta)
