@@ -39,8 +39,7 @@ void GomokuTree::find_possible_position(Node *target, int target_depth)
             if (_current_broad.get({i, j}) == Chess::empty)
             {
                 auto ptr = AllocatorTraits::allocate(_alloc, 1);
-                AllocatorTraits::construct(_alloc, ptr, target);
-                ptr->pos = Position{i, j};
+                AllocatorTraits::construct(_alloc, ptr, target, Position{i, j});
                 target->childs.push_back(ptr);
             }
     target->status = Node::searched;

@@ -23,6 +23,9 @@ struct Node
     Node(Node *p) : parent{p}
     {
     }
+    Node(Node *p, Position chess_pos) : parent{p}, pos{chess_pos}
+    {
+    }
 };
 
 class GomokuTree
