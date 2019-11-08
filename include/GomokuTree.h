@@ -51,13 +51,15 @@ class GomokuTree
     void cut_childs(Node *target, Node *except);
 
     // Search the tree for the best decision.
-    void search(Node *target, int target_depth, int depth_limit);
-    void pruning_search(Node *target, int target_depth, int depth_limit);
+    void search(int depth_limit);
+    void pruning_search(Node *target, int target_depth, int limit_depth);
 
     // Find out if it is the first player's turn.
-    bool is_first();
+    bool is_first(int depth);
 
     ChessBroad _current_broad;
+
+    // Before the current chess was put.
     Node *_current;
     NodeAllocator _alloc;
 
