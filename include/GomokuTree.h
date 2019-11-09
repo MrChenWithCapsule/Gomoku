@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "ChessBroad.h"
@@ -8,47 +9,56 @@ class Node;
 
 struct Edge
 {
-    Node *ptr = nullptr;
+    std::unique_ptr<Node> ptr = nullptr;
     Position pos;
+
+    Edge() = default;
+    explicit Edge(Position position);
+    Edge(std::unique_ptr<Node> p, Position position);
 };
 
 class Node
 {
   public:
     Node() = default;
-    Node(Node *parent);
+    Node(const Node *parent);
 
     // Cut the subtree of current node and mark this node as cut.
     void cut_subtree();
     void cut_subtree(Position except_pos);
 
     // Do a minmax search with depth limit, return the best step.
-    Position find_best_step(ChessBroad *broad, int depth_limit);
+    Position find_best_step(ChessBroad &broad, int depth_limit);
+
+    // Get the child which puts a chess at pos.
+    Node *get_child(Position pos);
+
+    // Get the next player's chess.
+    Chess get_chess() const;
 
   private:
+    // Minmax search with alpha-beta pruning.
+    void search(ChessBroad &broad, int depth_limit);
+
     // If the first player will take the next step.
-    bool next_first();
+    bool next_first() const;
 
     // Evaluate the score of current node statically, update _score.
-    void static_evaluate();
+    void static_evaluate(ChessBroad &broad);
 
     // Find the childs of current node.
-    void find_childs();
-
-    // Get next player's chess.
-    Chess get_chess();
+    void find_childs(ChessBroad &broad);
 
     enum NodeStatus
     {
-        not_searched,
-        searched, // Direct childs of this node are added.
+        normal,
         cut,
         leaf
     };
 
     const int _depth = 0; // The depth of root is 0.
     int _score = 0;
-    NodeStatus _stat = not_searched;
+    NodeStatus _stat = normal;
     const Node *_parent = nullptr;
     std::vector<Edge> _edges;
 };
@@ -56,15 +66,7 @@ class Node
 class GomokuTree
 {
   public:
-    GomokuTree() : _root{new Node{}}
-    {
-        _current = _root;
-    }
-    ~GomokuTree()
-    {
-        _root->cut_subtree();
-        delete _root;
-    }
+    GomokuTree();
 
     // Update the internal status when a player takes a step.
     void update(Position pos);
@@ -74,6 +76,6 @@ class GomokuTree
 
   private:
     ChessBroad _broad;
-    Node *const _root = nullptr;
+    std::unique_ptr<Node> _root = std::make_unique<Node>();
     Node *_current = nullptr;
 };
