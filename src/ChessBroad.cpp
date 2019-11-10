@@ -3,6 +3,11 @@
 
 #include "ChessBroad.h"
 
+bool in_range(Position pos)
+{
+    return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
+}
+
 Position operator+(Position left, Position right)
 {
     return {left.row + right.row, left.column + right.column};
@@ -59,9 +64,6 @@ bool ChessBroad::win_game(Position hint) const
 {
     // Check with a certain direction.
     auto check = [this](Position delta, Position origin) {
-        auto in_range = [](Position pos) {
-            return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
-        };
         Chess origin_ch = get(origin);
         int count = 0;
         for (Position pos = origin; in_range(pos) && get(pos) == origin_ch; pos = pos + delta)

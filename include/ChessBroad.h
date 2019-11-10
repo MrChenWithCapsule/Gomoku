@@ -11,6 +11,8 @@ struct Position
     int column;
 };
 
+bool in_range(Position pos);
+
 Position operator+(Position left, Position right);
 Position operator-(Position left, Position right);
 Position operator*(int n, Position pos);

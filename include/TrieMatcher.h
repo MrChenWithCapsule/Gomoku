@@ -16,6 +16,5 @@ class TrieMatcher
     int get_score(const ChessBroad &broad, Position pos, Position delta);
 
   private:
-    bool in_range(Position pos);
     std::unique_ptr<TrieNode> _root = std::make_unique<TrieNode>();
 };

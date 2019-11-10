@@ -29,8 +29,3 @@ int TrieMatcher::get_score(const ChessBroad &broad, Position pos, Position delta
     }
     return current->score;
 }
-
-bool TrieMatcher::in_range(Position pos)
-{
-    return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
-}

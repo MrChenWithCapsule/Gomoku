@@ -49,9 +49,6 @@ constexpr std::pair<Pattern, int> line_score[] = {
 // Check if matches.
 bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
 {
-    auto in_range = [](Position pos) {
-        return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
-    };
     for (int i = 0; i < line_score[index].first.size(); ++i)
     {
         switch (line_score[index].first[i])
