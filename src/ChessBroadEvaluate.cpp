@@ -1,9 +1,11 @@
 #include <array>
+#include <iostream>
 #include <numeric>
 #include <string>
 #include <utility>
 
 #include "ChessBroadEvaluate.h"
+#include "TrieMatcher.h"
 
 using Pattern = std::array<Chess, 5>;
 
@@ -30,7 +32,7 @@ constexpr Pattern operator""_c(const char *str, size_t len)
     return ret;
 }
 
-std::pair<Pattern, int> line_score[] = {
+constexpr std::pair<Pattern, int> line_score[] = {
     {" o"_c, 17},      {" x"_c, -12},     {"  o"_c, 17},      {"  x"_c, -12},         {"   o"_c, 17},
     {"   x"_c, -12},   {" o x"_c, 17},    {" x o"_c, -12},    {"  ox"_c, 15},         {"  xo"_c, -10},
     {" o  x"_c, 19},   {" x  o"_c, -14},  {"  o x"_c, 17},    {"  x o"_c, -12},       {"   ox"_c, 15},
@@ -67,6 +69,17 @@ bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
 
 // Try to match corresponding chesses with the pattern in the table.
 int match(const ChessBroad &broad, Position pos, Position delta)
+{
+    static TrieMatcher score_tree;
+    static int _dummy{[] {
+        for (const auto &pr : line_score)
+            score_tree.insert(pr.first, pr.second);
+        return 0;
+    }()};
+    return score_tree.get_score(broad, pos, delta);
+}
+
+int match2(const ChessBroad &broad, Position pos, Position delta)
 {
     for (int i = std::size(line_score) - 1; i >= 0; --i)
         if (is_match(broad, pos, delta, i))

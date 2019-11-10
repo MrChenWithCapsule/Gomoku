@@ -16,12 +16,12 @@ Position operator-(Position left, Position right);
 Position operator*(int n, Position pos);
 bool operator<(Position left, Position right);
 
-enum class Chess : char
+enum class Chess
 {
-    empty = ' ',
-    first_player = 'O',
-    second_player = 'X',
-    any = 'A' // For evaluation
+    empty,
+    first_player,
+    second_player,
+    any // For evaluation
 };
 
 std::ostream &operator<<(std::ostream &os, Chess ch);

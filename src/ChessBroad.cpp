@@ -17,7 +17,21 @@ Position operator*(int n, Position pos)
 }
 std::ostream &operator<<(std::ostream &os, Chess ch)
 {
-    return os << static_cast<char>(ch);
+    switch (ch)
+    {
+    case Chess::empty:
+        os << ' ';
+        break;
+    case Chess::first_player:
+        os << 'O';
+        break;
+    case Chess::second_player:
+        os << 'X';
+        break;
+    default:
+        break;
+    }
+    return os;
 }
 bool operator<(Position left, Position right)
 {
