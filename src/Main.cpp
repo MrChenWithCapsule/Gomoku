@@ -96,6 +96,5 @@ int main(int argc, char const *argv[])
         cout << "Broad is full." << endl;
     cout << "Press any key to exit." << endl;
     cin.get();
-    cin.get();
     return 0;
 }
