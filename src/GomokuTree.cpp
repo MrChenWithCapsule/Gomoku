@@ -36,9 +36,9 @@ void Node::cut_subtree(Position except_pos)
 
 Position Node::find_best_step(ChessBroad &broad, int depth_limit)
 {
-    _score = next_first() ? first_win : second_win;
-    auto worse_score = [this](int score1, int score2) {
-        return next_first() ? std::min(score1, score2) : std::max(score1, score2);
+    _score = next_first() ? second_win : first_win;
+    auto better_score = [this](int score1, int score2) {
+        return next_first() ? std::max(score1, score2) : std::min(score1, score2);
     };
     if (_edges.empty())
         find_childs(broad);
@@ -53,7 +53,7 @@ Position Node::find_best_step(ChessBroad &broad, int depth_limit)
     }
     return std::max_element(_edges.begin(), _edges.end(),
                             [&, this](const Edge &e1, const Edge &e2) {
-                                return worse_score(e1.ptr->_score, e2.ptr->_score) == e1.ptr->_score;
+                                return better_score(e1.ptr->_score, e2.ptr->_score) == e2.ptr->_score;
                             })
         ->pos;
 }
@@ -80,9 +80,9 @@ void Node::search(ChessBroad &broad, int depth_limit)
 {
     if (_stat == cut)
         return;
-    _score = next_first() ? first_win : second_win;
-    auto worse_score = [this](int score1, int score2) {
-        return next_first() ? std::min(score1, score2) : std::max(score1, score2);
+    _score = next_first() ? second_win : first_win;
+    auto better_score = [this](int score1, int score2) {
+        return next_first() ? std::max(score1, score2) : std::min(score1, score2);
     };
     if (_stat != cut && _stat != leaf && _edges.empty())
         find_childs(broad);
@@ -94,8 +94,8 @@ void Node::search(ChessBroad &broad, int depth_limit)
         else
             e.ptr->search(broad, depth_limit - 1);
         broad.emplace(e.pos, Chess::empty);
-        _score = worse_score(_score, e.ptr->_score);
-        if (worse_score(_score, _parent->_score) == _parent->_score)
+        _score = better_score(_score, e.ptr->_score);
+        if (better_score(_score, _parent->_score) == _score)
             return;
     }
 }
