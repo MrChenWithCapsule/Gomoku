@@ -73,16 +73,17 @@ int main(int argc, char const *argv[])
         cout << current_player_name << "'s turn, enter row,column: " << flush;
         while (true)
         {
+            auto in_range = [](Position pos) {
+                return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
+            };
             pos = current_player->get_pos(broad, pos);
-            try
-            {
-                broad.emplace(pos, current_player_chess);
-                break;
-            }
-            catch (const InvalidPosition &)
+            if (!in_range(pos) || broad.get(pos) != Chess::empty)
             {
                 cout << "Not a valid place, enter again: " << flush;
+                continue;
             }
+            broad.emplace(pos, current_player_chess);
+            break;
         }
         cout << clear << broad << flush;
         if (broad.win_game(pos))

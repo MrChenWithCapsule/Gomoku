@@ -26,10 +26,6 @@ enum class Chess
 
 std::ostream &operator<<(std::ostream &os, Chess ch);
 
-class InvalidPosition : public std::exception
-{
-};
-
 class ChessBroad
 {
   public:

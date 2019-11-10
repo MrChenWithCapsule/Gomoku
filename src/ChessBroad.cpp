@@ -45,12 +45,6 @@ ChessBroad::ChessBroad()
 }
 void ChessBroad::emplace(Position pos, Chess ch)
 {
-
-    auto in_range = [](Position pos) {
-        return pos.row >= 0 && pos.row < broad_size && pos.column >= 0 && pos.column < broad_size;
-    };
-    if (!in_range(pos) || (_broad[pos.row][pos.column] != Chess::empty && ch != Chess::empty))
-        throw InvalidPosition{};
     _broad[pos.row][pos.column] = ch;
 }
 bool ChessBroad::full() const
