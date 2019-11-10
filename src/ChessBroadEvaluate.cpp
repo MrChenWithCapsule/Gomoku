@@ -71,20 +71,15 @@ bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
 int match(const ChessBroad &broad, Position pos, Position delta)
 {
     static TrieMatcher score_tree;
+
+    // Initialize the trie tree.
     static int _dummy{[] {
         for (const auto &pr : line_score)
             score_tree.insert(pr.first, pr.second);
         return 0;
     }()};
-    return score_tree.get_score(broad, pos, delta);
-}
 
-int match2(const ChessBroad &broad, Position pos, Position delta)
-{
-    for (int i = std::size(line_score) - 1; i >= 0; --i)
-        if (is_match(broad, pos, delta, i))
-            return line_score[i].second;
-    return 0;
+    return score_tree.get_score(broad, pos, delta);
 }
 
 // Evaluate the score of the current point.
