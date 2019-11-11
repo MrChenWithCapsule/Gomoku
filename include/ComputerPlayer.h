@@ -5,7 +5,7 @@
 class ComputerPlayer : public Player
 {
   private:
-    bool _is_first;
+    const bool _is_first;
     GomokuTree _tree;
 
   public:

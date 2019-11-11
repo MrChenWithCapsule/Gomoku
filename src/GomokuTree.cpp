@@ -20,7 +20,7 @@ void Node::cut_subtree()
     for (auto &e : _edges)
         e.ptr->cut_subtree();
     _edges.clear();
-    _stat = cut;
+    _status = cut;
 }
 
 void Node::cut_subtree(Position except_pos)
@@ -55,7 +55,7 @@ Position Node::find_best_step(ChessBroad &broad, int depth_limit)
 
         if (depth_limit == 1)
             e.ptr->static_evaluate(broad);
-        else if (e.ptr->_stat != cut && e.ptr->_stat != leaf)
+        else if (e.ptr->_status != cut && e.ptr->_status != leaf)
             e.ptr->search(broad, depth_limit - 1);
 
         // Resume the chess broad.
@@ -101,7 +101,7 @@ void Node::search(ChessBroad &broad, int depth_limit)
         broad.emplace(e.pos, get_chess());
         if (depth_limit == 1)
             e.ptr->static_evaluate(broad);
-        else if (e.ptr->_stat != cut && e.ptr->_stat != leaf)
+        else if (e.ptr->_status != cut && e.ptr->_status != leaf)
             e.ptr->search(broad, depth_limit - 1);
         broad.emplace(e.pos, Chess::empty);
         _score = better_score(_score, e.ptr->_score);
@@ -109,7 +109,7 @@ void Node::search(ChessBroad &broad, int depth_limit)
         // Do alpha-beta pruning.
         if (better_score(_score, _parent->_score) == _score)
         {
-            _stat = cut;
+            _status = cut;
             return;
         }
     }
@@ -124,12 +124,12 @@ void Node::static_evaluate(ChessBroad &broad)
 {
     _score = evaluate(broad);
     if (_score == first_win || _score == second_win)
-        _stat = leaf;
+        _status = leaf;
 }
 
 void Node::find_childs(ChessBroad &broad)
 {
-    _stat = normal;
+    _status = normal;
     _edges.reserve(ChessBroad::size * ChessBroad::size - _depth);
     for (int i = 0; i < ChessBroad::size; ++i)
         for (int j = 0; j < ChessBroad::size; ++j)

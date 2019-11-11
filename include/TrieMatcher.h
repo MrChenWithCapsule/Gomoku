@@ -13,8 +13,8 @@ class TrieMatcher
 {
   public:
     void insert(std::array<Chess, 5> pat, int score);
-    int get_score(const ChessBroad &broad, Position pos, Position delta);
+    int get_score(const ChessBroad &broad, Position pos, Position delta) const;
 
   private:
-    std::unique_ptr<TrieNode> _root = std::make_unique<TrieNode>();
+    const std::unique_ptr<TrieNode> _root = std::make_unique<TrieNode>();
 };

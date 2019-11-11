@@ -10,7 +10,7 @@ class Node;
 struct Edge
 {
     std::unique_ptr<Node> ptr = nullptr;
-    Position pos;
+    const Position pos;
 
     Edge() = default;
     explicit Edge(Position position);
@@ -58,7 +58,7 @@ class Node
 
     const int _depth = 0; // The depth of root is 0.
     int _score = 0;
-    NodeStatus _stat = normal;
+    NodeStatus _status = normal;
     const Node *_parent = nullptr;
     std::vector<Edge> _edges;
 };
@@ -76,6 +76,6 @@ class GomokuTree
 
   private:
     ChessBroad _broad;
-    std::unique_ptr<Node> _root = std::make_unique<Node>();
+    const std::unique_ptr<Node> _root = std::make_unique<Node>();
     Node *_current = nullptr;
 };

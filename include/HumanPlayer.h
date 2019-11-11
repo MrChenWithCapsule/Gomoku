@@ -3,7 +3,7 @@
 class HumanPlayer : public Player
 {
   private:
-    bool _is_first;
+    const bool _is_first;
 
   public:
     HumanPlayer(bool is_first);
