@@ -25,7 +25,7 @@ int TrieMatcher::get_score(const ChessBroad &broad, Position pos, Position delta
         if (!p)
             break;
         current = p.get();
-        pos = pos + delta;
+        pos += delta;
     }
     return current->score;
 }

@@ -46,24 +46,6 @@ constexpr std::pair<Pattern, int> line_score[] = {
     {" oo o"_c, 1000}, {" xx x"_c, -800}, {" o oo"_c, 1000},  {" x xx"_c, -800},      {" ooo "_c, 1000},
     {" xxx "_c, -800}, {" oooo"_c, 3000}, {" xxxx"_c, -3500}, {"ooooo"_c, first_win}, {"xxxxx"_c, second_win}};
 
-// Check if matches.
-bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
-{
-    for (int i = 0; i < line_score[index].first.size(); ++i)
-    {
-        switch (line_score[index].first[i])
-        {
-        case Chess::any:
-            break;
-        default:
-            if (!ChessBroad::in_range(pos + i * delta) || broad.get(pos + i * delta) != line_score[index].first[i])
-                return false;
-            break;
-        }
-    }
-    return true;
-}
-
 // Try to match corresponding chesses with the pattern in the table.
 int match(const ChessBroad &broad, Position pos, Position delta)
 {
@@ -79,7 +61,7 @@ int match(const ChessBroad &broad, Position pos, Position delta)
     return score_tree.get_score(broad, pos, delta);
 }
 
-// Evaluate the score of the current point.
+// Evaluate the score of current point.
 int eval_point(const ChessBroad &broad, Position pos)
 {
     std::array scores{match(broad, pos, {1, 0}),  match(broad, pos, {1, 1}),  match(broad, pos, {0, 1}),

@@ -7,7 +7,7 @@ Edge::Edge(Position position) : pos{position}
 {
 }
 
-Edge::Edge(std::unique_ptr<Node> p, Position position) : ptr{p.release()}, pos{position}
+Edge::Edge(std::unique_ptr<Node> p, Position position) : ptr{std::move(p)}, pos{position}
 {
 }
 
@@ -27,7 +27,7 @@ void Node::cut_subtree(Position except_pos)
 {
     for (auto &e : _edges)
     {
-        if (e.pos.row == except_pos.row && e.pos.column == except_pos.column)
+        if (e.pos == except_pos)
             continue;
         e.ptr->cut_subtree();
     }
@@ -36,21 +36,33 @@ void Node::cut_subtree(Position except_pos)
 
 Position Node::find_best_step(ChessBroad &broad, int depth_limit)
 {
+    // Set the lower bound of score.
     _score = next_first() ? second_win : first_win;
+
+    // An utility to get the better score for the current player.
     auto better_score = [this](int score1, int score2) {
         return next_first() ? std::max(score1, score2) : std::min(score1, score2);
     };
+
     if (_edges.empty())
         find_childs(broad);
+
+    // Search the tree recursivly.
     for (auto &e : _edges)
     {
+        // Update the chess broad for child node.
         broad.emplace(e.pos, get_chess());
+
         if (depth_limit == 1)
             e.ptr->static_evaluate(broad);
-        else
+        else if (e.ptr->_stat != cut && e.ptr->_stat != leaf)
             e.ptr->search(broad, depth_limit - 1);
+
+        // Resume the chess broad.
         broad.emplace(e.pos, Chess::empty);
     }
+
+    // Return the best step.
     return std::max_element(_edges.begin(), _edges.end(),
                             [&, this](const Edge &e1, const Edge &e2) {
                                 return better_score(e1.ptr->_score, e2.ptr->_score) == e2.ptr->_score;
@@ -78,25 +90,28 @@ Chess Node::get_chess() const
 
 void Node::search(ChessBroad &broad, int depth_limit)
 {
-    if (_stat == cut)
-        return;
     _score = next_first() ? second_win : first_win;
     auto better_score = [this](int score1, int score2) {
         return next_first() ? std::max(score1, score2) : std::min(score1, score2);
     };
-    if (_stat != cut && _stat != leaf && _edges.empty())
+    if (_edges.empty())
         find_childs(broad);
     for (auto &e : _edges)
     {
         broad.emplace(e.pos, get_chess());
         if (depth_limit == 1)
             e.ptr->static_evaluate(broad);
-        else
+        else if (e.ptr->_stat != cut && e.ptr->_stat != leaf)
             e.ptr->search(broad, depth_limit - 1);
         broad.emplace(e.pos, Chess::empty);
         _score = better_score(_score, e.ptr->_score);
+
+        // Do alpha-beta pruning.
         if (better_score(_score, _parent->_score) == _score)
+        {
+            _stat = cut;
             return;
+        }
     }
 }
 
