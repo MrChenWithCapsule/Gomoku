@@ -7,5 +7,6 @@ class HumanPlayer : public Player
 
   public:
     HumanPlayer(bool is_first);
-    Position get_pos(const ChessBroad &current, Position last) override;
+    Position get_pos() override;
+    void update(Position last) override;
 };

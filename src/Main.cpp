@@ -32,11 +32,10 @@ int main(int argc, char const *argv[])
     // Startup
     cout << clear << image_gamestartup << flush;
 
-    std::unique_ptr<Player> first_player;
-    std::unique_ptr<Player> second_player;
+    std::unique_ptr<Player> players[2];
     // Choose mode
     cout << "Select mode: " << flush;
-    while (!first_player)
+    while (!players[0])
     {
         int mode;
         cin >> mode;
@@ -45,12 +44,12 @@ int main(int argc, char const *argv[])
         case 0:
             return 0;
         case 1:
-            first_player = std::make_unique<HumanPlayer>(true);
-            second_player = std::make_unique<ComputerPlayer>(false);
+            players[0] = std::make_unique<HumanPlayer>(true);
+            players[1] = std::make_unique<ComputerPlayer>(false);
             break;
         case 2:
-            first_player = std::make_unique<HumanPlayer>(true);
-            second_player = std::make_unique<HumanPlayer>(false);
+            players[0] = std::make_unique<HumanPlayer>(true);
+            players[1] = std::make_unique<HumanPlayer>(false);
             break;
 
         default:
@@ -61,34 +60,24 @@ int main(int argc, char const *argv[])
 
     // Play game
     ChessBroad broad;
-    bool is_first_player = true;
     cout << clear << broad << flush;
-    Position pos;
+    int current_player_id = 0;
     while (!broad.full())
     {
-        auto current_player = is_first_player ? first_player.get() : second_player.get();
-        auto current_player_name = is_first_player ? "First player" : "Second player";
-        auto current_player_chess = is_first_player ? Chess::first_player : Chess::second_player;
+        auto current_player_name = (current_player_id == 0) ? "Player 1" : "Player 2";
+        auto current_player_chess = (current_player_id == 0) ? Chess::first_player : Chess::second_player;
 
-        cout << current_player_name << "'s turn, enter row,column: " << flush;
-        while (true)
-        {
-            pos = current_player->get_pos(broad, pos);
-            if (!in_range(pos) || broad.get(pos) != Chess::empty)
-            {
-                cout << "Not a valid place, enter again: " << flush;
-                continue;
-            }
-            broad.emplace(pos, current_player_chess);
-            break;
-        }
+        cout << current_player_name << "'s turn.\n" << flush;
+        Position pos = players[current_player_id]->get_pos();
+        broad.emplace(pos, current_player_chess);
+        players[1 - current_player_id]->update(pos);
         cout << clear << broad << flush;
         if (broad.win_game(pos))
         {
             cout << current_player_name << " wins." << endl;
             break;
         }
-        is_first_player = !is_first_player;
+        current_player_id = 1 - current_player_id;
     }
     if (broad.full())
         cout << "Broad is full." << endl;

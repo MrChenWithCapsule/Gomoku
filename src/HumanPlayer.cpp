@@ -19,9 +19,10 @@ bool ignore_invalid_chars(std::istream &is)
 HumanPlayer::HumanPlayer(bool is_first) : _is_first{is_first}
 {
 }
-Position HumanPlayer::get_pos(const ChessBroad &current, Position last)
+Position HumanPlayer::get_pos()
 {
     std::string str;
+    std::cout << "Input row, column: " << std::flush;
     while (str.empty())
         std::getline(std::cin, str);
     std::istringstream strin{str};
@@ -35,4 +36,10 @@ Position HumanPlayer::get_pos(const ChessBroad &current, Position last)
     strin >> c;
 
     return {r - 1, c - 1};
+}
+
+void HumanPlayer::update(Position last)
+{
+    auto another_player_name = _is_first ? "Player 2" : "Player 1";
+    std::cout << another_player_name << "placed a chess at: " << last.row << ' ' << last.column << std::endl;
 }
