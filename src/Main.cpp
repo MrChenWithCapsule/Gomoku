@@ -54,7 +54,7 @@ int main(int argc, char const *argv[])
             break;
 
         default:
-            cout << "Wrong mode, enter again." << endl;
+            cout << "Wrong mode, choose again." << endl;
             break;
         }
     }

@@ -41,5 +41,5 @@ Position HumanPlayer::get_pos()
 void HumanPlayer::update(Position last)
 {
     auto another_player_name = _is_first ? "Player 2" : "Player 1";
-    std::cout << another_player_name << "placed a chess at: " << last.row << ' ' << last.column << std::endl;
+    std::cout << another_player_name << " placed a chess at: " << last.row << ' ' << last.column << std::endl;
 }
