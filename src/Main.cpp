@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "ChessBroad.h"
+#include "ChessBroadEvaluate.h"
 #include "ClearScreen.h"
 #include "ComputerPlayer.h"
 #include "HumanPlayer.h"
@@ -62,25 +63,25 @@ int main(int argc, char const *argv[])
     ChessBroad broad;
     cout << clear << broad << flush;
     int current_player_id = 0;
-    while (!broad.full())
+    while (!broad.full() && evaluate(broad) != first_win && evaluate(broad) != second_win)
     {
         auto current_player_name = (current_player_id == 0) ? "Player 1" : "Player 2";
         auto current_player_chess = (current_player_id == 0) ? Chess::first_player : Chess::second_player;
 
-        cout << current_player_name << "'s turn.\n" << flush;
+        cout << clear << broad << current_player_name << "'s turn." << endl;
+
         Position pos = players[current_player_id]->get_pos();
         broad.emplace(pos, current_player_chess);
         players[1 - current_player_id]->update(pos);
-        cout << clear << broad << flush;
-        if (broad.win_game(pos))
-        {
-            cout << current_player_name << " wins." << endl;
-            break;
-        }
+
         current_player_id = 1 - current_player_id;
     }
     if (broad.full())
         cout << "Broad is full." << endl;
+    else if (evaluate(broad) == first_win)
+        cout << "Player 1 wins." << endl;
+    else
+        cout << "Player 2 wins." << endl;
     cout << "Press any key to exit." << endl;
     cin.get();
     return 0;

@@ -40,9 +40,6 @@ class ChessBroad
     // Find out if the broad is full.
     bool full() const;
 
-    // Find out if somebody wins.
-    bool win_game(Position hint) const;
-
     // Get the chess at the specified position.
     Chess get(Position pos) const;
 
