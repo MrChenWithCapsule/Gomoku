@@ -33,8 +33,7 @@ class ChessBroad
   public:
     ChessBroad();
 
-    // Place a chess at the specified position,
-    // throw if it's not empty.
+    // Place a chess at the specified position.
     void emplace(Position pos, Chess ch);
 
     // Find out if the broad is full.
