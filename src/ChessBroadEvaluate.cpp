@@ -56,7 +56,7 @@ bool is_match(const ChessBroad &broad, Position pos, Position delta, int index)
         case Chess::any:
             break;
         default:
-            if (!in_range(pos + i * delta) || broad.get(pos + i * delta) != line_score[index].first[i])
+            if (!ChessBroad::in_range(pos + i * delta) || broad.get(pos + i * delta) != line_score[index].first[i])
                 return false;
             break;
         }
@@ -93,8 +93,8 @@ int eval_point(const ChessBroad &broad, Position pos)
 int evaluate(const ChessBroad &broad)
 {
     int score = 0;
-    for (int i = 0; i < broad_size; ++i)
-        for (int j = 0; j < broad_size; ++j)
+    for (int i = 0; i < ChessBroad::size; ++i)
+        for (int j = 0; j < ChessBroad::size; ++j)
         {
             int tmp = eval_point(broad, {i, j});
             if (tmp == first_win || tmp == second_win)

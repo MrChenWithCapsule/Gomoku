@@ -115,9 +115,9 @@ void Node::static_evaluate(ChessBroad &broad)
 void Node::find_childs(ChessBroad &broad)
 {
     _stat = normal;
-    _edges.reserve(broad_size * broad_size - _depth);
-    for (int i = 0; i < broad_size; ++i)
-        for (int j = 0; j < broad_size; ++j)
+    _edges.reserve(ChessBroad::size * ChessBroad::size - _depth);
+    for (int i = 0; i < ChessBroad::size; ++i)
+        for (int j = 0; j < ChessBroad::size; ++j)
             if (broad.get({i, j}) == Chess::empty)
                 _edges.emplace_back(std::make_unique<Node>(this), Position{i, j});
 }
