@@ -33,3 +33,7 @@
 
 # Cmake build dictionary
 build
+
+# clangd
+compile_commands.json
+.clangd
