@@ -1,5 +1,7 @@
+#include <array>
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "ChessBroad.h"
 #include "ChessBroadEvaluate.h"
@@ -13,7 +15,7 @@ using std::cout;
 using std::endl;
 using std::flush;
 
-char image_gamestartup[] =
+std::string image_gamestartup =
     R"(
 *************************************************
 *   ________                       __           *
@@ -33,7 +35,7 @@ int main(int argc, char const *argv[])
     // Startup
     cout << clear << image_gamestartup << flush;
 
-    std::unique_ptr<Player> players[2];
+    std::array<std::unique_ptr<Player>, 2> players;
     // Choose mode
     cout << "Select mode: " << flush;
     while (!players[0])
@@ -63,10 +65,14 @@ int main(int argc, char const *argv[])
     ChessBroad broad;
     cout << clear << broad << flush;
     int current_player_id = 0;
-    while (!broad.full() && evaluate(broad) != first_win && evaluate(broad) != second_win)
+    while (!broad.full() && evaluate(broad) != first_win &&
+           evaluate(broad) != second_win)
     {
-        auto current_player_name = (current_player_id == 0) ? "Player 1" : "Player 2";
-        auto current_player_chess = (current_player_id == 0) ? Chess::first_player : Chess::second_player;
+        auto current_player_name =
+            (current_player_id == 0) ? "Player 1" : "Player 2";
+        auto current_player_chess = (current_player_id == 0)
+                                        ? Chess::first_player
+                                        : Chess::second_player;
 
         cout << clear << broad << current_player_name << "'s turn." << endl;
 

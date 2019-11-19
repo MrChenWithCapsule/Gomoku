@@ -16,7 +16,8 @@ void TrieMatcher::insert(std::array<Chess, 5> pat, int score)
     current->score = score;
 }
 
-int TrieMatcher::get_score(const ChessBroad &broad, Position pos, Position delta) const
+int TrieMatcher::get_score(const ChessBroad &broad, Position pos,
+                           Position delta) const
 {
     TrieNode *current = _root.get();
     while (ChessBroad::in_range(pos))

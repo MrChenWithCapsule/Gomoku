@@ -48,7 +48,7 @@ std::ostream &operator<<(std::ostream &os, Chess ch)
     return os;
 }
 
-ChessBroad::ChessBroad()
+ChessBroad::ChessBroad() : _broad{}
 {
     for (auto &arr : _broad)
         arr.fill(Chess::empty);
@@ -71,7 +71,8 @@ Chess ChessBroad::get(Position pos) const
 }
 bool ChessBroad::in_range(Position pos)
 {
-    return pos.row >= 0 && pos.row < size && pos.column >= 0 && pos.column < size;
+    return pos.row >= 0 && pos.row < size && pos.column >= 0 &&
+           pos.column < size;
 }
 std::ostream &operator<<(std::ostream &os, const ChessBroad &broad)
 {
@@ -85,7 +86,8 @@ std::ostream &operator<<(std::ostream &os, const ChessBroad &broad)
         os << std::setw(3) << i + 1 << '|';
         for (int j = 0; j < ChessBroad::size; ++j)
             os << ' ' << broad.get({i, j}) << " |" << std::flush;
-        os << "\n   |-----------------------------------------------------------|\n";
+        os << "\n   "
+              "|-----------------------------------------------------------|\n";
     }
     os << std::flush;
     return os;
